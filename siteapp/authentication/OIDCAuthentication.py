@@ -19,8 +19,8 @@ from siteapp.models import Portfolio, User
 class OIDCAuth(OIDCAuthenticationBackend):
 
     def is_admin(self, groups):
-        if settings.OIDC_ROLES_MAP["admin"] in groups:
-            return True
+        #if settings.OIDC_ROLES_MAP["admin"] in groups: #okta -- restore when groups pass in claim
+            #return True
         return False
 
     def create_user(self, claims):
