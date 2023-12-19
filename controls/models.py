@@ -882,13 +882,16 @@ class System(auto_prefetch.Model, TagModelMixin, ProposalModelMixin):
             #     print(f"self.pid_current: {self.pid_current} XXXXXXXXXXXXX") # DEBUG
             #     self.pid_current = smt.pid
             if smt.producer_element:
+                #smt_formatted = smt.body.replace('\n','<br/>')
                 # Add 'body_rendered' property to smt containing rendered version of smt.body in case we have embedded parameters
-                # System is available here as self
+                # System is available here as `self`
                 smt_env = Environment(loader=DictLoader({'smt_body_template': smt.body}))
                 template = smt_env.get_template('smt_body_template')
-                smt.body_rendered = template.render(system=self)
+                try:
+                    smt.body_rendered = template.render(system=self)
+                except:
+                    smt.body_rendered = "<ERROR: incorrect jinja variable>\n" + smt.body
                 smt_formatted = smt.body_rendered.replace('\n','<br/>')
-                # smt_formatted = smt.body.replace('\n','<br/>')
                 # TODO: Clean up special characters
                 smt_formatted = smt_formatted.replace(u"\u2019", "'").replace(u"\u2022", "<li>")
                 # Poor performance, at least in some instances, appears to being caused by `smt.producer_element.name`
@@ -1017,6 +1020,16 @@ class System(auto_prefetch.Model, TagModelMixin, ProposalModelMixin):
         )
 
         return se
+
+    def answer(self, module='speedy_ssp_basic_info',answer='internal_customer'):
+        # To Do:
+        try:
+            module_question_answer = self.projects.all()[0].export_json()['project']['answers'][module]['value']['answers'][answer]['text']
+            return module_question_answer
+        except:
+            return f"<missing param: {module} or {answer}>"
+
+
 
 class SystemEvent(auto_prefetch.Model, TagModelMixin, BaseModel):
     system = auto_prefetch.ForeignKey('System', related_name='events', on_delete=models.CASCADE, blank=True,

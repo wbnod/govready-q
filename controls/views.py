@@ -2293,7 +2293,10 @@ def editor(request, system_id, catalog_key, cl_id):
         for smt in impl_smts:
             smt_env = Environment(loader=DictLoader({'smt_body_template': smt.body}))
             template = smt_env.get_template('smt_body_template')
-            smt.body_rendered = template.render(system=system)
+            try:
+                smt.body_rendered = template.render(system=system)
+            except:
+                smt.body_rendered = "<ERROR: incorrect jinja variable>\n" + smt.body
             #rendered = template.render(project=project, system=system)
 
         # oscalize key
