@@ -104,7 +104,7 @@ urlpatterns = [
     url(r"^systems/", include("controls.urls")),
     url(r"^api/v1/systems/", include("controls.urls_api")),
 
-    url(r"^controls$", include("controls.urls")),
+    # url(r"^controls$", include("controls.urls")),
     url(r"^controls/", include("controls.urls")),
 
     # portfolios
