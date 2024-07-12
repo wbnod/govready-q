@@ -26,6 +26,7 @@ from django.db.models import Q
 from django.db.models.functions import Lower
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseForbidden, JsonResponse, \
     HttpResponseNotAllowed
+from jinja2 import Environment, DictLoader
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.text import slugify
@@ -2285,6 +2286,19 @@ def editor(request, system_id, catalog_key, cl_id):
         # need parties and roles to not be empty
         # Build OSCAL SSP
         # Example: https://github.com/usnistgov/oscal-content/tree/master/examples/ssp/json/ssp-example.json
+
+        # Add 'body_rendered' property to smt containing rendered version of smt.body in case we have embedded parameters
+        # Get the system
+        system = System.objects.get(pk=system_id)
+        for smt in impl_smts:
+            smt_env = Environment(loader=DictLoader({'smt_body_template': smt.body}))
+            template = smt_env.get_template('smt_body_template')
+            try:
+                smt.body_rendered = template.render(system=system)
+            except:
+                smt.body_rendered = "<ERROR: incorrect jinja variable>\n" + smt.body
+            #rendered = template.render(project=project, system=system)
+
         # oscalize key
         cl_id = oscalize_control_id(cl_id)
 

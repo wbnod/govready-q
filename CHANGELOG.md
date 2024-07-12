@@ -1,6 +1,21 @@
 GovReady-Q Release Notes
 ========================
 
+v0.xx.xx (December 10, 2023)
+---------------------------
+
+**Feature changes**
+
+* Support dynamically rendered Jinja parameters for system properties in control implementation statements.
+
+**UI changes**
+
+* Display rendered parameters for system properties in system control implementation statements.
+
+**Developer changes**
+
+* Add statement.body_rendered property containing jinja rendered content in system control implementation statements.
+
 v0.11.8 (June 11, 2023)
 ---------------------------
 
@@ -24,9 +39,6 @@ v0.11.6 (March 14, 2023)
 **Developer changes**
 
 * Upgrade Python libraries.
-
-**Developer changes**
-
 * Add siteapp.management_views as webhooks for calling Django management commands.
 
 
